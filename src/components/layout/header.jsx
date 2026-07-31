@@ -1,10 +1,10 @@
-import {  Link, NavLink} from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
 
 function Header () {
     return (
-        <header className='bg-slate-900 text-white shadow-md'>
+        <header className='sticky top-0 z-50 bg-slate-900 text-white shadow-md opacity-97'>
             <div className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4'>
-            <h1 className='text-2xl font-bold tracking-wide'>
+            <h1 className='text-3xl font-bold tracking-wide'>
                 My App
             </h1>
             <nav className='flex items-center gap-6'>
