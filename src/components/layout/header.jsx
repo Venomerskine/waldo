@@ -1,14 +1,49 @@
-import {  Link } from 'react-router-dom';
+import {  Link, NavLink} from 'react-router-dom';
 
 function Header () {
     return (
-        <header>
-            <h1>My App</h1>
-            <nav>
-                <Link to="/">Home</Link>
-                <Link to="/leaderboard">Leaderboard</Link>
-                <Link to="/game">Game</Link>
+        <header className='bg-slate-900 text-white shadow-md'>
+            <div className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4'>
+            <h1 className='text-2xl font-bold tracking-wide'>
+                My App
+            </h1>
+            <nav className='flex items-center gap-6'>
+                <NavLink 
+                    to="/"
+                    // className='transition-colors duration-200 hover:text-blue-400'
+                    className={({isActive}) => 
+                    isActive
+                    ? "text-blue-400 font-semibold"
+                    : "transition-colors duration-200 hover:text-blue-400"}
+                >
+                    Home
+                </NavLink>
+
+
+                <NavLink 
+                    to="/leaderboard"
+                    // className='transition-colors duration-200 hover:text-blue-400'
+                    className={({isActive}) => 
+                    isActive
+                    ? "text-blue-400 font-semibold"
+                    : "transition-colors duration-200 hover:text-blue-400"}
+                >
+                    Leaderboard
+                </NavLink>
+
+                <NavLink
+                    to="/game"
+                    className='rounded-md bg-blue-800 px-4 py-2 transition hover:bg-blue-700'
+                    className={({isActive}) => 
+                    isActive
+                    ? "invisible"
+                    : "rounded-md bg-blue-800 px-4 py-2 transition hover:bg-blue-700"}
+                >
+                    Play Game
+                    
+                </NavLink>
             </nav>
+            </div>
         </header>
     );
 }
