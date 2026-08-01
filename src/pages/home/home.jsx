@@ -1,4 +1,72 @@
+import { NavLink } from 'react-router-dom';
+// import { useEffec, useState } from 'react';
+
+import beachImage from "./Wheres-Waldo-Beach-Super-High-Resolution-scaled.jpg";
+import candyFactoryImage from "./Wheres-Waldo-Candy-Factory-Super-High-Resolution-scaled.jpg";
+import skiingImage from "./Wheres-Waldo-Skiing-Super-High-Resolution-scaled.jpg";
+import spaceStationImage from "./Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg";
+
 function Home() {
+
+    let characters = [
+                        {
+                            "id": "char-101",
+                            "name": "Fire Mage",
+                            "description": "Controls flames and deals heavy area-of-effect damage.",
+                            "characterUrl": beachImage
+                        },
+                        {
+                            "id": "char-102",
+                            "name": "Shadow Rogue",
+                            "description": "Master of stealth, critical strikes, and mobility.",
+                            "characterUrl": candyFactoryImage
+                        },
+                        {
+                            "id": "char-103",
+                            "name": "Waldo Skiing",
+                            "description": "Spot Waldo somewhere on the snowy slopes.",
+                            "characterUrl": skiingImage,
+                        },
+                        {
+                            "id": "char-104",
+                            "name": "Waldo in Space",
+                            "description": "Find Waldo aboard the busy space station.",
+                            "characterUrl": spaceStationImage,
+                        },
+                    ]
+
+// export default function CharacterGrid() {
+//     const [characters, setCharacters] = useState([]);
+//     const [loading, setLoading] = useState(true);
+//     const [error, setError] = useState(null);
+
+//     useEffect(() => {
+//         async function fetchCharacters() {
+//         try {
+//             const response = await fetch('YOUR_BACKEND_API_URL/characters');
+//             if (!response.ok) {
+//             throw new Error('Failed to load characters');
+//             }
+//             const data = await response.json();
+//             setCharacters(data);
+//         } catch (err) {
+//             setError(err.message);
+//         } finally {
+//             setLoading(false);
+//         }
+//         }
+
+//         fetchCharacters();
+//     }, []);
+
+//     if (loading) {
+//         return <div className="text-center py-10">Loading characters...</div>;
+//     }
+
+//     if (error) {
+//         return <div className="text-center py-10 text-red-500">Error: {error}</div>;
+//     }
+// }
     return (
         <div className="mx-auto max-w-7xl space-y-10 mt-4">
             {/* Hero */}
@@ -51,33 +119,34 @@ function Home() {
                         </span>
                     </div>
 
-                    <button className="mt-6 w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition hover:bg-blue-700">
+                    {/* <button className="mt-6 w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition hover:bg-blue-700">
                         Start Game
-                    </button>
+                    </button> */}
                 </aside>
 
                  <div className="grid gap-6 sm:grid-cols-2 lg:col-span-3 xl:grid-cols-3">
-                    {[1, 2, 3].map((card) => (
-                        <div
-                        key={card}
+                    {characters.map((character) => (
+                        <NavLink
+                        key={character.id}
+                        to={`/game/${character.id}`}
                         className="overflow-hidden rounded-xl bg-white shadow transition duration-300 hover:-translate-y-2 hover:shadow-xl"
                         >
                         <img
-                            src={`https://picsum.photos/400/300?random=${card}`}
-                            alt="Character"
+                            src={character.characterUrl}
+                            alt={character.name}
                             className="h-56 w-full object-cover"
                         />
 
                         <div className="p-4">
                             <h3 className="text-lg font-semibold">
-                            Character {card}
+                            Character {character.name}
                             </h3>
 
                             <p className="mt-2 text-sm text-gray-600">
-                            Click to view or play with this character.
+                            {character.description}
                             </p>
                         </div>
-                        </div>
+                        </NavLink>
                     ))}
                 </div>
             </section>

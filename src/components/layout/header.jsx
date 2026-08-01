@@ -31,7 +31,7 @@ function Header () {
                     Leaderboard
                 </NavLink>
 
-                <NavLink
+                {/* <NavLink
                     to="/game"
                     className='rounded-md bg-blue-800 px-4 py-2 transition hover:bg-blue-700'
                     className={({isActive}) => 
@@ -41,7 +41,7 @@ function Header () {
                 >
                     Play Game
                     
-                </NavLink>
+                </NavLink> */}
             </nav>
             </div>
         </header>
