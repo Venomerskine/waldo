@@ -35,6 +35,8 @@ function Home() {
                         },
                     ]
 
+                    
+
 // export default function CharacterGrid() {
 //     const [characters, setCharacters] = useState([]);
 //     const [loading, setLoading] = useState(true);
