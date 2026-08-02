@@ -25,21 +25,42 @@ function Game() {
   const { characterId } = useParams();
   const game = games[characterId];
 
-  const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [clickPosition, setClickPosition] = useState(null);
 
     function handleImageClick(event) {
+
         const image = event.currentTarget
         const bounds = image.getBoundingClientRect();
+        
+        const xPercent = ((event.clientX - bounds.left) / bounds.width) * 100;
+        const yPercent = ((event.clientY - bounds.top) / bounds.height) * 100;
 
-        const x = event.clientX - bounds.left;
-        const y = event.clientY - bounds.top;
-
-        const xPercent = (( x / bounds.width) * 100).toFixed(2);
-        const yPercent = (( y / bounds.height) * 100).toFixed(2);
+        setClickPosition({
+            x: Number(xPercent.toFixed(2)),
+            y: Number(yPercent.toFixed(2)),
+        })
 
         setIsPopupOpen(true)
 
         console.log("Clicked position:", { xPercent, yPercent});
+    }
+
+
+    function handleCharacterSelect(selectedCharacter) {
+        const selectionData = {
+            gameId: characterId,
+            character: selectedCharacter,
+            clickedPosition: clickPosition,
+        };
+
+        console.log(selectionData)
+// send to backend
+// await axios.post
+
+        setIsPopupOpen(false);
+        setClickPosition(null)
+
     }
 
   if (!game) {
@@ -81,12 +102,12 @@ function Game() {
             onClick={handleImageClick}
             className="max-h-[75vh] w-auto max-w-full object-contain"
           />
-          
+
           <CharacterPopup
             isOpen={isPopupOpen}
             characters={characters}
             onClose={() => setIsPopupOpen(false)}
-            onSelect={(character) => console.log(character)}
+            onSelect={handleCharacterSelect}
         />
         </div>
       </section>
