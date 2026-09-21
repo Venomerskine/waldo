@@ -72,12 +72,12 @@ function Home() {
     return (
         <div className="mx-auto max-w-7xl space-y-10 mt-4">
             {/* Hero */}
-            <section className="rounded-xl bg-slate-900 p-10 text-center text-white shadow-lg">
+            <section className="rounded-xl bg-slate-100 p-10 text-center text-slate-800 shadow-lg">
                 <h1 className="mb-4 text-5xl font-bold">
                     Where's Waldo
                 </h1>
 
-                <p className="mx-auto max-w-2xl text-slate-300">
+                <p className="mx-auto max-w-2xl text-slate-600">
                     Test your memory! Click character only once.
                     Selecting the same character twice ends the game.  
                 </p>
