@@ -11,13 +11,13 @@ function Home() {
     let characters = [
                         {
                             "id": "char-101",
-                            "name": "Fire Mage",
+                            "name": "Waldo Beach",
                             "description": "Controls flames and deals heavy area-of-effect damage.",
                             "characterUrl": beachImage
                         },
                         {
                             "id": "char-102",
-                            "name": "Shadow Rogue",
+                            "name": "Candy Scene",
                             "description": "Master of stealth, critical strikes, and mobility.",
                             "characterUrl": candyFactoryImage
                         },
@@ -78,8 +78,7 @@ function Home() {
                 </h1>
 
                 <p className="mx-auto max-w-2xl text-slate-600">
-                    Test your memory! Click character only once.
-                    Selecting the same character twice ends the game.  
+                     Find Waldo
                 </p>
             </section>
 
