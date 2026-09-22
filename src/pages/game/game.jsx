@@ -124,6 +124,7 @@ function Game() {
             characters={characters}
             onClose={() => setIsPopupOpen(false)}
             onSelect={handleCharacterSelect}
+            clickPosition={clickPosition}
         />
         </div> */}
 
@@ -146,14 +147,15 @@ function Game() {
                 }}
               />
             )}
-          </div>
 
           <CharacterPopup
             isOpen={isPopupOpen}
             characters={characters}
             onClose={handlePopupClose}
             onSelect={handleCharacterSelect}
-          />
+            clickPosition={clickPosition}
+            />
+            </div>
         </div>
       </section>
 

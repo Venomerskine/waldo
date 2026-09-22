@@ -1,10 +1,29 @@
-export default function CharacterPopup({isOpen, characters, onSelect, onClose}) {
+export default function CharacterPopup({isOpen, characters, onSelect, onClose, clickPosition}) {
 
-    if (!isOpen) return null;
+    if (!isOpen || !clickPosition) return null;
+
+    const opensLeft = clickPosition.x > 50;
+    const opensAbove = clickPosition.y > 50;
+
+    const popupPositionStyle = {
+        position: "absolute",
+
+        top: `${clickPosition.y}%`,
+        left: `${clickPosition.x}%`,
+
+        transform: `
+            translate(
+                ${opensLeft ? "-100%" : "0"},
+                ${opensAbove ? "-100%" : "0"}
+            )
+        `,
+    };
 
     return (
         <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        // className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        className="absolute z-50  p-2"
+        style={popupPositionStyle}
         onClick={onClose}
         >
 
@@ -12,26 +31,26 @@ export default function CharacterPopup({isOpen, characters, onSelect, onClose}) 
             role="dialog"
             aria-modal="true"
             aria-labelledby="character-popup-title"
-            className="w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-xl bg-white p-4 shadow-2xl"
             onClick={(event) => event.stopPropagation()}
         >
 
-            <div className="mb-5 flex items-center justify-between">
+            <div className="mb-1 flex items-center justify-between">
                 <h2 id="character-popup-title" className="text-xl font-bold text-slate-900">
-                    Who did you find
+                    Who did you find?
                 </h2>
 
                 <button
                     type="button"
                     onClick={onClose}
-                    aria-label="Close cahracter selector"
-                    className="rounded p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                    aria-label="Close character selector"
+                    className="rounded p-1 text-red-700 hover:bg-slate-100 hover:text-red-500"
                 >
-                    X
+                    x
                 </button>
             </div>
 
-        <ul className="space-y-2">
+        <ul className="space-y-1">
             { characters.map((character) => (
                 <li key={character.id}>
                     <button
