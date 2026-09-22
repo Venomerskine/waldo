@@ -59,7 +59,7 @@ function Game() {
             clickedPosition: clickPosition,
         };
 
-        console.log(selectionData)
+        console.log("Selected Data:",selectionData)
 // send to backend
 // await axios.post
 
