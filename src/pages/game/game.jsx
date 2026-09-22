@@ -46,6 +46,11 @@ function Game() {
         console.log("Clicked position:", { xPercent, yPercent});
     }
 
+    function handlePopupClose() {
+      setIsPopupOpen(false);
+      setClickPosition(null);
+    }
+
 
     function handleCharacterSelect(selectedCharacter) {
         const selectionData = {
@@ -94,14 +99,25 @@ function Game() {
         </Link>
       </div>
 
-      <section className="rounded-2xl bg-slate-900 p-3 shadow-xl sm:p-1">
-        <div className="relative mx-auto flex min-h-[50vh] items-center justify-center overflow-hidden rounded-xl bg-slate-200">
+      <section className="rounded-2xl bg-slate-00 p-3 shadow-xl sm:p-1">
+        {/* <div className="relative inline-block">
           <img
             src={game.image}
             alt={game.name}
             onClick={handleImageClick}
-            className="max-h-[75vh] w-auto max-w-full object-contain"
+            className="block max-h-[75vh] w-auto max-w-full cursor-crosshair object-contain"
           />
+
+          {clickPosition && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-red-500 bg-red-500/20 shadow-lg"
+              style={{
+                left: `${clickPosition.x}%`,
+                top: `${clickPosition.y}%`,
+              }}
+            />
+          )}
 
           <CharacterPopup
             isOpen={isPopupOpen}
@@ -109,6 +125,35 @@ function Game() {
             onClose={() => setIsPopupOpen(false)}
             onSelect={handleCharacterSelect}
         />
+        </div> */}
+
+        <div className="relative mx-auto flex min-h-[50vh] items-center justify-center overflow-hidden rounded-xl bg-slate-200">
+          <div className="relative inline-block">
+            <img
+              src={game.image}
+              alt={game.name}
+              onClick={handleImageClick}
+              className="block max-h-[75vh] w-auto max-w-full cursor-crosshair object-contain"
+            />
+
+            {clickPosition && (
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-red-500 bg-red-500/20 shadow-lg"
+                style={{
+                  left: `${clickPosition.x}%`,
+                  top: `${clickPosition.y}%`,
+                }}
+              />
+            )}
+          </div>
+
+          <CharacterPopup
+            isOpen={isPopupOpen}
+            characters={characters}
+            onClose={handlePopupClose}
+            onSelect={handleCharacterSelect}
+          />
         </div>
       </section>
 
