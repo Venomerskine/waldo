@@ -1,74 +1,24 @@
 import { NavLink } from 'react-router-dom';
-// import { useEffec, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getCharacters } from '../../lib/api';
 
-import beachImage from "./Wheres-Waldo-Beach-Super-High-Resolution-scaled.jpg";
-import candyFactoryImage from "./Wheres-Waldo-Candy-Factory-Super-High-Resolution-scaled.jpg";
-import skiingImage from "./Wheres-Waldo-Skiing-Super-High-Resolution-scaled.jpg";
-import spaceStationImage from "./Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg";
 
 function Home() {
 
-    let characters = [
-                        {
-                            "id": "char-101",
-                            "name": "Waldo Beach",
-                            "description": "Controls flames and deals heavy area-of-effect damage.",
-                            "characterUrl": beachImage
-                        },
-                        {
-                            "id": "char-102",
-                            "name": "Candy Scene",
-                            "description": "Master of stealth, critical strikes, and mobility.",
-                            "characterUrl": candyFactoryImage
-                        },
-                        {
-                            "id": "char-103",
-                            "name": "Waldo Skiing",
-                            "description": "Spot Waldo somewhere on the snowy slopes.",
-                            "characterUrl": skiingImage,
-                        },
-                        {
-                            "id": "char-104",
-                            "name": "Waldo in Space",
-                            "description": "Find Waldo aboard the busy space station.",
-                            "characterUrl": spaceStationImage,
-                        },
-                    ]
 
                     
+    const [characters, setCharacters] = useState([])
+    const [error, setError] = useState(null);
 
-// export default function CharacterGrid() {
-//     const [characters, setCharacters] = useState([]);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState(null);
+    useEffect(() => {
+        getCharacters()
+            .then(setCharacters)
+            .catch((err) => setError(err.message));
+    }, [])
 
-//     useEffect(() => {
-//         async function fetchCharacters() {
-//         try {
-//             const response = await fetch('YOUR_BACKEND_API_URL/characters');
-//             if (!response.ok) {
-//             throw new Error('Failed to load characters');
-//             }
-//             const data = await response.json();
-//             setCharacters(data);
-//         } catch (err) {
-//             setError(err.message);
-//         } finally {
-//             setLoading(false);
-//         }
-//         }
+    if(error) return <p>Error: {error}</p>
 
-//         fetchCharacters();
-//     }, []);
 
-//     if (loading) {
-//         return <div className="text-center py-10">Loading characters...</div>;
-//     }
-
-//     if (error) {
-//         return <div className="text-center py-10 text-red-500">Error: {error}</div>;
-//     }
-// }
     return (
         <div className="mx-auto max-w-7xl space-y-10 mt-4">
             {/* Hero */}
