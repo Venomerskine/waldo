@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export async function getCharacters() {
+export async function getScenes() {
     const response = await fetch(`${API_URL}/api/games`);
 
     if (!response.ok) {

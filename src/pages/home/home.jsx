@@ -1,18 +1,18 @@
 import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCharacters } from '../../lib/api';
+import { getScenes } from '../../lib/api';
 
 
 function Home() {
 
 
                     
-    const [characters, setCharacters] = useState([])
+    const [scenes, setScenes] = useState([])
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        getCharacters()
-            .then(setCharacters)
+        getScenes()
+            .then(setScenes)
             .catch((err) => setError(err.message));
     }, [])
 
@@ -76,25 +76,26 @@ function Home() {
                 </aside>
 
                  <div className="grid gap-6 sm:grid-cols-2 lg:col-span-3 xl:grid-cols-3">
-                    {characters.map((character) => (
+                    {scenes.map((scene) => (
                         <NavLink
-                        key={character.id}
-                        to={`/game/${character.id}`}
+                        key={scene.id}
+                        to={`/game/${scene.id}`}
                         className="overflow-hidden rounded-xl bg-white shadow transition duration-300 hover:-translate-y-2 hover:shadow-xl"
                         >
                         <img
-                            src={character.characterUrl}
-                            alt={character.name}
+                            // src={scene.imageUrl}
+                            src={`http://localhost:5000${scene.imageUrl}`}
+                            alt={scene.name}
                             className="h-56 w-full object-cover"
                         />
 
                         <div className="p-4">
                             <h3 className="text-lg font-semibold">
-                            Character {character.name}
+                            Scene {scene.name}
                             </h3>
 
                             <p className="mt-2 text-sm text-gray-600">
-                            {character.description}
+                            {scene.description}
                             </p>
                         </div>
                         </NavLink>
