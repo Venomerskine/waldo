@@ -1,32 +1,59 @@
 import { Link, useParams } from "react-router-dom";
-import beachImage from "../home/Wheres-Waldo-Beach-Super-High-Resolution-scaled.jpg";
-import candyFactoryImage from "../home/Wheres-Waldo-Candy-Factory-Super-High-Resolution-scaled.jpg";
-import skiingImage from "../home/Wheres-Waldo-Skiing-Super-High-Resolution-scaled.jpg";
-import spaceStationImage from "../home/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg";
+// import beachImage from "../home/Wheres-Waldo-Beach-Super-High-Resolution-scaled.jpg";
+// import candyFactoryImage from "../home/Wheres-Waldo-Candy-Factory-Super-High-Resolution-scaled.jpg";
+// import skiingImage from "../home/Wheres-Waldo-Skiing-Super-High-Resolution-scaled.jpg";
+// import spaceStationImage from "../home/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg";
 import CharacterPopup from "../../components/game/characters";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getSceneById } from "../../lib/api";
 
-const games = {
-  "char-101": { name: "Waldo at the Beach", image: beachImage },
-  "char-102": { name: "Waldo at the Candy Factory", image: candyFactoryImage },
-  "char-103": { name: "Waldo Skiing", image: skiingImage },
-  "char-104": { name: "Waldo in Space", image: spaceStationImage },
-};
 
-const characters = [
-  { id: "waldo", name: "Waldo" },
-  { id: "wenda", name: "Wenda" },
-  { id: "wizard", name: "Wizard Whitebeard" },
-  { id: "odlaw", name: "Odlaw" },
-];
+// const scenes = {
+//   "char-101": { name: "Waldo at the Beach", image: beachImage },
+//   "char-102": { name: "Waldo at the Candy Factory", image: candyFactoryImage },
+//   "char-103": { name: "Waldo Skiing", image: skiingImage },
+//   "char-104": { name: "Waldo in Space", image: spaceStationImage },
+// };
+
+// const characters = [
+//   { id: "waldo", name: "Waldo" },
+//   { id: "wenda", name: "Wenda" },
+//   { id: "wizard", name: "Wizard Whitebeard" },
+//   { id: "odlaw", name: "Odlaw" },
+// ];
 
 function Game() {
 
-  const { characterId } = useParams();
-  const game = games[characterId];
+  const sceneId = useParams()
+
+  console.log("sceneId :",sceneId.characterId)
+
+  
+  // const scene = scenes[sceneId];
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [clickPosition, setClickPosition] = useState(null);
+  const [scene, setScene] = useState(null);
+  const [error, setError] = useState(null);
+
+
+  useEffect(() => {
+    async function loadScene() {
+      try { 
+        console.log("Scene id in front load scene :", sceneId.characterId)
+        const data = await getSceneById(sceneId.characterId);
+        // console.log("Scene data",data)
+        setScene(data);
+      } catch(err) {
+        setError(err.messagw)
+      }
+    } 
+    
+    loadScene();
+  },[sceneId]);
+
+  console.log("Scene data: ",scene)
+  if(error) return <p>New Error: {error}</p>
 
     function handleImageClick(event) {
 
@@ -54,7 +81,7 @@ function Game() {
 
     function handleCharacterSelect(selectedCharacter) {
         const selectionData = {
-            gameId: characterId,
+            sceneId: sceneId,
             character: selectedCharacter,
             clickedPosition: clickPosition,
         };
@@ -68,12 +95,12 @@ function Game() {
 
     }
 
-  if (!game) {
+  if (!scene) {
     return (
       <section className="mx-auto max-w-7xl px-4 py-16 text-center">
-        <h1 className="text-3xl font-bold text-slate-900">Game not found</h1>
+        <h1 className="text-3xl font-bold text-slate-900">scene not found</h1>
         <Link to="/" className="mt-5 inline-block text-blue-600 hover:underline">
-          Back to game selection
+          Back to scene selection
         </Link>
       </section>
     );
@@ -87,7 +114,7 @@ function Game() {
             Find Waldo
           </p>
           <h1 className="mt-1 text-3xl font-bold text-slate-900 sm:text-4xl">
-            {game.name}
+            {scene.name}
           </h1>
         </div>
 
@@ -95,15 +122,15 @@ function Game() {
           to="/"
           className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
         >
-          Exit game
+          Exit scene
         </Link>
       </div>
 
       <section className="rounded-2xl bg-slate-00 p-3 shadow-xl sm:p-1">
         {/* <div className="relative inline-block">
           <img
-            src={game.image}
-            alt={game.name}
+            src={scene.image}
+            alt={scene.name}
             onClick={handleImageClick}
             className="block max-h-[75vh] w-auto max-w-full cursor-crosshair object-contain"
           />
@@ -131,8 +158,8 @@ function Game() {
         <div className="relative mx-auto flex min-h-[50vh] items-center justify-center overflow-hidden rounded-xl bg-slate-200">
           <div className="relative inline-block">
             <img
-              src={game.image}
-              alt={game.name}
+              src={`http://localhost:5000${scene.imageUrl}`}
+              alt={scene.name}
               onClick={handleImageClick}
               className="block max-h-[75vh] w-auto max-w-full cursor-crosshair object-contain"
             />
@@ -150,7 +177,7 @@ function Game() {
 
           <CharacterPopup
             isOpen={isPopupOpen}
-            characters={characters}
+            characters={scene.characters}
             onClose={handlePopupClose}
             onSelect={handleCharacterSelect}
             clickPosition={clickPosition}
