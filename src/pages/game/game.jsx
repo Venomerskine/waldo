@@ -26,7 +26,7 @@ function Game() {
 
   const sceneId = useParams()
 
-  console.log("sceneId :",sceneId.characterId)
+  // console.log("sceneId :",sceneId.characterId)
 
   
   // const scene = scenes[sceneId];
@@ -40,9 +40,15 @@ function Game() {
   useEffect(() => {
     async function loadScene() {
       try { 
-        console.log("Scene id in front load scene :", sceneId.characterId)
+        // console.log("Scene id in front load scene :", sceneId.characterId)
         const data = await getSceneById(sceneId.characterId);
         // console.log("Scene data",data)
+        // console.log("Scene character 0 : ",data.characters[0])
+        // console.log("Scene character 0's id : ",data.characters[0].id)
+        // console.log("Scene character character info : ",data.characters[0].character)
+        // console.log("Scene character character name : ",data.characters[0].character.name)
+
+
         setScene(data);
       } catch(err) {
         setError(err.messagw)
@@ -52,7 +58,7 @@ function Game() {
     loadScene();
   },[sceneId]);
 
-  console.log("Scene data: ",scene)
+  // console.log("Scene data: ",scene)
   if(error) return <p>New Error: {error}</p>
 
     function handleImageClick(event) {

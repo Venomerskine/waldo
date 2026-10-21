@@ -58,7 +58,7 @@ export default function CharacterPopup({isOpen, characters, onSelect, onClose, c
                         onClick={() => onSelect(character)}
                         className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left font-medium text-slate-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
                     >
-                        {character.name}
+                        {character.character.name}
                     </button>
                 </li>
             ))}

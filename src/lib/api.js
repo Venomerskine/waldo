@@ -10,10 +10,10 @@ export async function getScenes() {
 }
 
 export async function getSceneById(sceneId) {
-    console.log("Scene id in api get scene :", sceneId)
+    // console.log("Scene id in api get scene :", sceneId)
 
     const response = await fetch(`${API_URL}/api/games/scenes/${sceneId}`);
-    console.log("get scene response :", response)
+    // console.log("get scene response :", response)
 
     if (!response.ok) {
         throw new Error(`Api  response failed: ${response.status}`)
