@@ -52,7 +52,7 @@ export default function CharacterPopup({isOpen, characters, onSelect, onClose, c
 
         <ul className="space-y-1">
             { characters.map((character) => (
-                <li key={character.id}>
+                <li key={character.character}>
                     <button
                         type="button"
                         onClick={() => onSelect(character)}

@@ -15,6 +15,7 @@ function Home() {
             .then(setScenes)
             .catch((err) => setError(err.message));
     }, [])
+    console.log("Scenes in home page :", scenes)
 
     if(error) return <p>Error: {error}</p>
 

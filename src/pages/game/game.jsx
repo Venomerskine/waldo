@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import CharacterPopup from "../../components/game/characters";
 import { useEffect, useState } from "react";
 import { getSceneById } from "../../lib/api";
+import { verifyGuess } from "../../lib/api";
 
 
 // const scenes = {
@@ -96,6 +97,22 @@ function Game() {
 // send to backend
 // await axios.post
 
+        const handleGuess = async () => {
+          try {
+            const result = await verifyGuess(selectionData);
+            if (result.found) {
+              console.log(`You found ${selectedCharacter.character.name}!`);
+            } else {
+              console.log(`Sorry, ${selectedCharacter.character.name} is not at this location.`);
+            }
+            console.log("Guess result:", result);
+            // Handle the result (e.g., show a message to the user)
+          } catch (error) {
+            console.error("Error verifying guess:", error);
+          }
+        }
+
+        handleGuess();
         setIsPopupOpen(false);
         setClickPosition(null)
 
