@@ -43,11 +43,12 @@ function Game() {
       try { 
         // console.log("Scene id in front load scene :", sceneId.characterId)
         const data = await getSceneById(sceneId.characterId);
-        // console.log("Scene data",data)
-        // console.log("Scene character 0 : ",data.characters[0])
-        // console.log("Scene character 0's id : ",data.characters[0].id)
-        // console.log("Scene character character info : ",data.characters[0].character)
-        // console.log("Scene character character name : ",data.characters[0].character.name)
+        console.log("Scene data",data)
+        console.log("Scene dot character", data.characters)
+        console.log("Scene character 0 : ",data.characters[0])
+        console.log("Scene character 0's id : ",data.characters[0].id)
+        console.log("Scene character character info : ",data.characters[0].character)
+        console.log("Scene character character name : ",data.characters[0].character.name)
 
 
         setScene(data);
