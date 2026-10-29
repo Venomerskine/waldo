@@ -1,10 +1,25 @@
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getScenes } from '../../lib/api';
+import { startGame } from '../../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 
 function Home() {
 
+    const navigate = useNavigate();
+
+    async function handleStartGame(sceneId) {
+        console.log("Starting game for sceneId:", sceneId);
+        try {
+            const data = await startGame(sceneId);
+            console.log("Start game response data:", data);
+            // Navigate to the game page with the sceneId
+            navigate(`/game/${sceneId}/${data.gameSessionId}`);
+        } catch (error) {
+            console.error("Error starting game:", error);
+        }
+    }
 
                     
     const [scenes, setScenes] = useState([])
@@ -78,13 +93,12 @@ function Home() {
 
                  <div className="grid gap-6 sm:grid-cols-2 lg:col-span-3 xl:grid-cols-3">
                     {scenes.map((scene) => (
-                        <NavLink
+                        <button
                         key={scene.id}
-                        to={`/game/${scene.id}`}
+                        onClick={() => handleStartGame(scene.id)}
                         className="overflow-hidden rounded-xl bg-white shadow transition duration-300 hover:-translate-y-2 hover:shadow-xl"
                         >
                         <img
-                            // src={scene.imageUrl}
                             src={`http://localhost:5000${scene.imageUrl}`}
                             alt={scene.name}
                             className="h-56 w-full object-cover"
@@ -99,7 +113,7 @@ function Home() {
                             {scene.description}
                             </p>
                         </div>
-                        </NavLink>
+                        </button>
                     ))}
                 </div>
             </section>

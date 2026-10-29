@@ -10,20 +10,23 @@ export async function getScenes() {
 }
 
 export async function getSceneById(sceneId) {
-    // console.log("Scene id in api get scene :", sceneId)
+    console.log("Scene id in api get scene :", sceneId)
 
     const response = await fetch(`${API_URL}/api/games/scenes/${sceneId}`);
-    // console.log("get scene response :", response)
+    console.log("get scene response :", response)
 
     if (!response.ok) {
-        throw new Error(`Api  response failed: ${response.status}`)
+        throw new Error(`Api get scene by id failed: ${response.status}`)
     }
     return response.json()
 }
 
-export const verifyGuess = async (selectionData) => {
+export const verifyGuess = async (sceneId,selectionData) => {
+    sceneId = sceneId.characterId
+    console.log("Scene id in POST", sceneId)
+
     const response = await fetch(
-        `${API_URL}/api/games/verify-guess`,
+        `${API_URL}/api/games/scenes/${sceneId}/verify-guess`,
         {
             method: "POST",
             headers: {
@@ -39,4 +42,20 @@ export const verifyGuess = async (selectionData) => {
         throw new Error(data.message || "Failed to verify guess");
     }
     return data;
+}
+
+export async function startGame(sceneId) {
+
+    const response = await fetch(`${API_URL}/api/games/scenes/${sceneId}/startGame`,
+        {
+            method: "POST",
+        }
+    )
+
+    if (!response.ok) {
+        throw new Error(`Failed to start game: ${response.status}`);
+    }
+    const data = await response.json()
+
+    return data
 }

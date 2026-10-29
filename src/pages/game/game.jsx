@@ -41,8 +41,8 @@ function Game() {
   useEffect(() => {
     async function loadScene() {
       try { 
-        // console.log("Scene id in front load scene :", sceneId.characterId)
-        const data = await getSceneById(sceneId.characterId);
+        console.log("Scene id in front load scene :", sceneId)
+        const data = await getSceneById(sceneId.sceneId);
         console.log("Scene data",data)
         console.log("Scene dot character", data.characters)
         console.log("Scene character 0 : ",data.characters[0])
@@ -100,7 +100,7 @@ function Game() {
 
         const handleGuess = async () => {
           try {
-            const result = await verifyGuess(selectionData);
+            const result = await verifyGuess(sceneId, selectionData);
             if (result.found) {
               console.log(`You found ${selectedCharacter.character.name}!`);
             } else {
