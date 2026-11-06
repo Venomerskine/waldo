@@ -8,22 +8,25 @@ import { useNavigate } from 'react-router-dom';
 function Home() {
 
     const navigate = useNavigate();
+    const [scenes, setScenes] = useState([])
+    const [error, setError] = useState(null);
 
     async function handleStartGame(sceneId) {
         console.log("Starting game for sceneId:", sceneId);
         try {
             const data = await startGame(sceneId);
+            // setGameSessionId(data.gameSessionId);
             console.log("Start game response data:", data);
             // Navigate to the game page with the sceneId
-            navigate(`/game/${sceneId}/${data.gameSessionId}`);
+            navigate(`/game/${sceneId}/${data.gameSessionId}`, {
+                state: { sceneId, gameSessionId: data.gameSessionId },
+            });
         } catch (error) {
             console.error("Error starting game:", error);
         }
     }
 
                     
-    const [scenes, setScenes] = useState([])
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         getScenes()

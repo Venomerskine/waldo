@@ -1,31 +1,16 @@
-import { Link, useParams } from "react-router-dom";
-// import beachImage from "../home/Wheres-Waldo-Beach-Super-High-Resolution-scaled.jpg";
-// import candyFactoryImage from "../home/Wheres-Waldo-Candy-Factory-Super-High-Resolution-scaled.jpg";
-// import skiingImage from "../home/Wheres-Waldo-Skiing-Super-High-Resolution-scaled.jpg";
-// import spaceStationImage from "../home/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg";
-import CharacterPopup from "../../components/game/characters";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getSceneById } from "../../lib/api";
-import { verifyGuess } from "../../lib/api";
+import { getSceneById, verifyGuess, getRemainingTargets } from "../../lib/api";
+import CharacterPopup from "../../components/game/characters";
 
 
-// const scenes = {
-//   "char-101": { name: "Waldo at the Beach", image: beachImage },
-//   "char-102": { name: "Waldo at the Candy Factory", image: candyFactoryImage },
-//   "char-103": { name: "Waldo Skiing", image: skiingImage },
-//   "char-104": { name: "Waldo in Space", image: spaceStationImage },
-// };
-
-// const characters = [
-//   { id: "waldo", name: "Waldo" },
-//   { id: "wenda", name: "Wenda" },
-//   { id: "wizard", name: "Wizard Whitebeard" },
-//   { id: "odlaw", name: "Odlaw" },
-// ];
 
 function Game() {
 
-  const sceneId = useParams()
+  const { sceneId }  = useParams()
+  const location = useLocation()
+  const gameSessionId = location.state?.gameSessionId
+  // console.log("Game session id in game page :", gameSessionId)
 
   // console.log("sceneId :",sceneId.characterId)
 
@@ -36,88 +21,139 @@ function Game() {
   const [clickPosition, setClickPosition] = useState(null);
   const [scene, setScene] = useState(null);
   const [error, setError] = useState(null);
+  const [characters, setCharacters] = useState([])
+  const [loading, setLoading ] = useState(true)
 
 
   useEffect(() => {
     async function loadScene() {
       try { 
-        console.log("Scene id in front load scene :", sceneId)
-        const data = await getSceneById(sceneId.sceneId);
-        console.log("Scene data",data)
-        console.log("Scene dot character", data.characters)
-        console.log("Scene character 0 : ",data.characters[0])
-        console.log("Scene character 0's id : ",data.characters[0].id)
-        console.log("Scene character character info : ",data.characters[0].character)
-        console.log("Scene character character name : ",data.characters[0].character.name)
+        // console.log("Scene id in front load scene :", sceneId)
+        const data = await getSceneById(sceneId);
+        console.log("Scene data in game page after getSceneById :", data)
+        // console.log("Scene data",data)
+        // console.log("Scene dot character", data.characters)
+        // console.log("Scene character 0 : ",data.characters[0])
+        // console.log("Scene character 0's id : ",data.characters[0].id)
+        // console.log("Scene character character info : ",data.characters[0].character)
+        // console.log("Scene character character name : ",data.characters[0].character.name)
 
+
+        // console.log("Scene data in game page after setScene :",scene)
+        // setCharacters(data.characters);
+        // Set the character state as remaing characters.
+        const remainingTargets = await getRemainingTargets(gameSessionId);
+        console.log("Remaining targets after getRemainingTargets :", remainingTargets)
+
+        const remainingCharacterIds = remainingTargets.map(target => target.characterId);
+
+        console.log("Remaining character ids after getRemainingTargets :", remainingCharacterIds)
+
+        const remainingCharacters = data.characters.filter(character =>
+          remainingCharacterIds.includes(character.characterId)
+        );
+
+        console.log("Remaining characters after filtering :", remainingCharacters)
 
         setScene(data);
+        setCharacters(remainingCharacters);
+
       } catch(err) {
-        setError(err.messagw)
+        setError(err.message)
+      } finally {
+        setLoading(false)
       }
     } 
     
     loadScene();
   },[sceneId]);
 
+  
+  if (loading) return <p>Loadind scene...</p>
   // console.log("Scene data: ",scene)
   if(error) return <p>New Error: {error}</p>
 
-    function handleImageClick(event) {
 
-        const image = event.currentTarget
-        const bounds = image.getBoundingClientRect();
-        
-        const xPercent = ((event.clientX - bounds.left) / bounds.width) * 100;
-        const yPercent = ((event.clientY - bounds.top) / bounds.height) * 100;
+  // console.log("Scene data in game page: ",scene)
 
-        setClickPosition({
-            x: Number(xPercent.toFixed(2)),
-            y: Number(yPercent.toFixed(2)),
-        })
 
-        setIsPopupOpen(true)
 
-        console.log("Clicked position:", { xPercent, yPercent});
+
+  function handleImageClick(event) {
+
+      const image = event.currentTarget
+      const bounds = image.getBoundingClientRect();
+      
+      const xPercent = ((event.clientX - bounds.left) / bounds.width) * 100;
+      const yPercent = ((event.clientY - bounds.top) / bounds.height) * 100;
+
+      setClickPosition({
+          x: Number(xPercent.toFixed(2)),
+          y: Number(yPercent.toFixed(2)),
+      })
+
+      setIsPopupOpen(true)
+
+      // console.log("Clicked position:", { xPercent, yPercent});
+  }
+
+  function handlePopupClose() {
+    setIsPopupOpen(false);
+    setClickPosition(null);
+  }
+
+
+  async function handleCharacterSelect(selectedCharacter) {
+    const selectionData = {
+        sceneId,
+        gameSessionId: gameSessionId,
+        character: selectedCharacter,
+        clickedPosition: clickPosition,
+    };
+
+    // console.log("Selected Data:",selectionData)
+
+      
+    try {
+      console.log("Sending guess for scene, sceneId before veify guess in game  :", sceneId);
+      console.log("Selection data before veify guess in game :", selectionData);
+
+      const result = await verifyGuess(sceneId, selectionData);
+      // console.log("Result of verifyGeuss call : ", result)
+      // console.log("result.alreadyFound of verifyGeuss call : ", result.alreadyFound)
+      // console.log("Result.found of verifyGeuss call : ", result.found)
+      // console.log("Result.foundAt of verifyGeuss call : ", result.foundAt)
+      // console.log("result.remainigCount", result.remainingCount)
+      // console.log("Result.remaingTargets of verifyGeuss call : ", result.remainingTargets)
+      // console.log("Result.status of verifyGeuss call : ", result.status)
+      const remainingCharacterIds = result.remainingTargets.map(target => target.characterId);
+      console.log("Remaining character ids after verify guess :", remainingCharacterIds)
+
+
+    const remainingCharacters = scene.characters.filter(character =>
+    remainingCharacterIds.has(character.characterId)
+    );
+
+      setCharacters(remainingCharacters);
+
+      if (result.found) {
+
+        console.log(`You found ${selectedCharacter.character.name}!`);
+      } else {
+        console.log(`Sorry, ${selectedCharacter.character.name} is not at this location.`);
+      }
+      console.log("Guess result:", result);
+      // Handle the result (e.g., show a message to the user)
+    } catch (error) {
+      console.error("Error verifying guess:", error);
     }
+      
 
-    function handlePopupClose() {
-      setIsPopupOpen(false);
-      setClickPosition(null);
-    }
+      
+    setIsPopupOpen(false);
+    setClickPosition(null)
 
-
-    function handleCharacterSelect(selectedCharacter) {
-        const selectionData = {
-            sceneId: sceneId,
-            character: selectedCharacter,
-            clickedPosition: clickPosition,
-        };
-
-        console.log("Selected Data:",selectionData)
-// send to backend
-// await axios.post
-
-        const handleGuess = async () => {
-          try {
-            const result = await verifyGuess(sceneId, selectionData);
-            if (result.found) {
-              console.log(`You found ${selectedCharacter.character.name}!`);
-            } else {
-              console.log(`Sorry, ${selectedCharacter.character.name} is not at this location.`);
-            }
-            console.log("Guess result:", result);
-            // Handle the result (e.g., show a message to the user)
-          } catch (error) {
-            console.error("Error verifying guess:", error);
-          }
-        }
-
-        handleGuess();
-        setIsPopupOpen(false);
-        setClickPosition(null)
-
-    }
+  }
 
   if (!scene) {
     return (
@@ -150,34 +186,7 @@ function Game() {
         </Link>
       </div>
 
-      <section className="rounded-2xl bg-slate-00 p-3 shadow-xl sm:p-1">
-        {/* <div className="relative inline-block">
-          <img
-            src={scene.image}
-            alt={scene.name}
-            onClick={handleImageClick}
-            className="block max-h-[75vh] w-auto max-w-full cursor-crosshair object-contain"
-          />
-
-          {clickPosition && (
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-red-500 bg-red-500/20 shadow-lg"
-              style={{
-                left: `${clickPosition.x}%`,
-                top: `${clickPosition.y}%`,
-              }}
-            />
-          )}
-
-          <CharacterPopup
-            isOpen={isPopupOpen}
-            characters={characters}
-            onClose={() => setIsPopupOpen(false)}
-            onSelect={handleCharacterSelect}
-            clickPosition={clickPosition}
-        />
-        </div> */}
+      <section className="rounded-2xl bg-slate-00 p-3 shadow-xl sm:p-1">-
 
         <div className="relative mx-auto flex min-h-[50vh] items-center justify-center overflow-hidden rounded-xl bg-slate-200">
           <div className="relative inline-block">
@@ -201,7 +210,7 @@ function Game() {
 
           <CharacterPopup
             isOpen={isPopupOpen}
-            characters={scene.characters}
+            characters={characters}
             onClose={handlePopupClose}
             onSelect={handleCharacterSelect}
             clickPosition={clickPosition}
