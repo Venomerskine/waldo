@@ -44,9 +44,9 @@ export default function CharacterPopup({isOpen, characters, onSelect, onClose, c
                     type="button"
                     onClick={onClose}
                     aria-label="Close character selector"
-                    className="rounded p-1 text-red-700 hover:bg-slate-100 hover:text-red-500"
+                    className="rounded p-4 text-red-700 hover:bg-slate-100 hover:text-red-500 font-extrabold"
                 >
-                    x
+                    X
                 </button>
             </div>
 

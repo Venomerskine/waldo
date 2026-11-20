@@ -2,16 +2,20 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getSceneById, verifyGuess, getRemainingTargets } from "../../lib/api";
 import CharacterPopup from "../../components/game/characters";
+import ClickFeedback from "../../components/game/clickFeedback";
 
 
 
 function Game() {
 
+
+  const [feedback, setFeedback] = useState(null);
   const { sceneId }  = useParams()
   const location = useLocation()
-  const gameSessionId = location.state?.gameSessionId
+  // Read session id from url as fallback if not passed in state
+  const gameSessionId = location.state?.gameSessionId || new URLSearchParams(location.search).get("gameSessionId")
   // console.log("Game session id in game page :", gameSessionId)
-
+  
   // console.log("sceneId :",sceneId.characterId)
 
   
@@ -104,6 +108,9 @@ function Game() {
 
 
   async function handleCharacterSelect(selectedCharacter) {
+
+    const submittedPosition = clickPosition
+
     const selectionData = {
         sceneId,
         gameSessionId: gameSessionId,
@@ -126,32 +133,42 @@ function Game() {
       // console.log("result.remainigCount", result.remainingCount)
       // console.log("Result.remaingTargets of verifyGeuss call : ", result.remainingTargets)
       // console.log("Result.status of verifyGeuss call : ", result.status)
+
+      setFeedback({
+        id: Date.now(),
+        x: submittedPosition.x,
+        y: submittedPosition.y,
+        correct: Boolean(result.found)
+      })
+
       const remainingCharacterIds = result.remainingTargets.map(target => target.characterId);
       console.log("Remaining character ids after verify guess :", remainingCharacterIds)
 
 
     const remainingCharacters = scene.characters.filter(character =>
-    remainingCharacterIds.has(character.characterId)
+    remainingCharacterIds.includes(character.characterId)
     );
 
       setCharacters(remainingCharacters);
 
       if (result.found) {
-
-        console.log(`You found ${selectedCharacter.character.name}!`);
-      } else {
-        console.log(`Sorry, ${selectedCharacter.character.name} is not at this location.`);
-      }
+        // Display succes message 
+        // alert(`You found ${selectedCharacter.character.name}`)
+        // console.log(`You found ${selectedCharacter.character.name}!`);
+        setCharacters((current) => 
+        current.filter(
+          (entry) => entry.characterId !== selectedCharacter.characterId
+        ))
+      } 
       console.log("Guess result:", result);
       // Handle the result (e.g., show a message to the user)
     } catch (error) {
       console.error("Error verifying guess:", error);
+    } finally {
+      setIsPopupOpen(false);
+      setClickPosition(null)
     }
       
-
-      
-    setIsPopupOpen(false);
-    setClickPosition(null)
 
   }
 
@@ -216,6 +233,15 @@ function Game() {
             clickPosition={clickPosition}
             />
             </div>
+            {feedback && (
+              <ClickFeedback
+              key={feedback.id}
+              x={feedback}
+              y={feedback.y}
+              correct={feedback.correct}
+              onComplete={() => setFeedback(null)}
+              />
+            )}
         </div>
       </section>
 

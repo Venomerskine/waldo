@@ -1,0 +1,45 @@
+.click-feedback {
+  position: absolute;
+  z-index: 40;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  padding: 0.5rem 0.8rem;
+  border-radius: 9999px;
+  color: white;
+  font-weight: 700;
+  white-space: nowrap;
+  animation: click-feedback-pop 1.1s ease-out forwards;
+}
+
+.click-feedback.success {
+  background: rgb(22 163 74 / 95%);
+}
+
+.click-feedback.miss {
+  background: rgb(220 38 38 / 95%);
+}
+
+@keyframes click-feedback-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.75);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -65%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -85%) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .click-feedback {
+    animation-duration: 1ms;
+  }
+}
