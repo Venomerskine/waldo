@@ -37,6 +37,7 @@ export const verifyGuess = async (sceneId,selectionData) => {
     );
 
     const data = await response.json();
+    console.log("Verify guess response in api.js:", data)
 
     if (!response.ok) {
         throw new Error(data.message || "Failed to verify guess");
