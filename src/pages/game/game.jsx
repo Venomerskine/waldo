@@ -70,7 +70,7 @@ function Game() {
     } 
     
     loadScene();
-  },[sceneId]);
+  },[sceneId, gameSessionId]);
 
   
   if (loading) return <p>Loadind scene...</p>

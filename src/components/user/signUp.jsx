@@ -9,12 +9,12 @@ export default function SignUp() {
             <div className='signup-container'>
                 <h1>Sign Up</h1>
                 <form>
-                    <label> Email : 
+                    <label> Email : </label>
                         <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}/>
-                    </label>
-                    <label> Password :
+                    <label> Password : </label>
                         <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    </label>
+
+                        <button type="submit">Submit</button>
                 </form>
             </div>
         </>

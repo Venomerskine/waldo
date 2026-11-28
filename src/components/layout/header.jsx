@@ -9,7 +9,7 @@ function Header () {
             </h1>
             <nav className='flex items-center gap-6'>
                 <NavLink 
-                    to="/"
+                    to="/home"
                     // className='transition-colors duration-200 hover:text-blue-400'
                     className={({isActive}) => 
                     isActive
